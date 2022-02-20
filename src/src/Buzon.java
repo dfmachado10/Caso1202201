@@ -5,24 +5,65 @@ public class Buzon {
 	private int capacidad;
 	private int cantidadActual;
 	private String[] memoria;
-	private T thread;
+	private Object almacenadoresDormidos;
+	private Object entregadoresDormidos;
+	
 	public Buzon(char id, int capacidad) {
 		this.id = id;
 		this.capacidad = capacidad;
 		memoria = new String[capacidad];
-		System.out.println(id +" " + capacidad);
+		almacenadoresDormidos = new Object();
+		entregadoresDormidos = new Object();
 	}
-	
+
 	private void guardarMensaje(String mensaje) {
-		while(cantidadActual == capacidad ) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+		synchronized (almacenadoresDormidos) {
+			while(cantidadActual == capacidad ) {
+				try {
+					almacenadoresDormidos.wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			synchronized(this) {
+				memoria[cantidadActual-1] = mensaje;
+				cantidadActual++;
+				entregadoresDormidos.notify();
 			}
 		}
 	}
-	
-	
+	public String retirarMensaje() {
+		String mensaje = null;
+		synchronized(entregadoresDormidos) {
+			while(cantidadActual == 0) {
+				try {
+					entregadoresDormidos.wait();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			synchronized(this) {
+				mensaje = memoria[cantidadActual-1];
+				memoria[cantidadActual-1] = "";
+				cantidadActual--;
+				almacenadoresDormidos.notify();
+			}
+		}
+		return mensaje;
+		
+	}
+
+	public boolean tieneMensaje() {
+		if(cantidadActual > 0) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+
+
 
 }
