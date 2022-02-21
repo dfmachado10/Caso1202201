@@ -23,6 +23,7 @@ public class Buzon {
 	}
 	
 	public void guardarMensaje(String mensaje) {
+		System.out.println("El buzon: " + id  + " recibe el mensaje " + mensaje);
 		synchronized (almacenadoresDormidos) {
 			while(cantidadActual == capacidad ) {
 				try {
@@ -32,10 +33,10 @@ public class Buzon {
 				}
 				
 			}
-			synchronized(this) {
+			synchronized(entregadoresDormidos) {
+				cantidadActual++;
 				memoria[cantidadActual-1] = mensaje;
 				
-				cantidadActual++;
 				entregadoresDormidos.notify();
 			}
 		}
@@ -73,6 +74,10 @@ public class Buzon {
 		else {
 			return false;
 		}
+	}
+
+	public int getCantidadActual() {
+		return cantidadActual;
 	}
 
 

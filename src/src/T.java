@@ -52,6 +52,7 @@ public class T extends Thread{
 
 	}
 	private void recibirSincrono() {
+
 		//Pasivo
 		mensaje = buzonRecibir.retirarMensaje();
 		transformarMensaje();
@@ -64,9 +65,11 @@ public class T extends Thread{
 
 	}
 	private void enviarAsincrono() {
-
-		while(buzonEnviar.getMemoria().length == buzonEnviar.getCapacidad()) {
-			this.yield();
+		while(buzonEnviar.getCantidadActual() == buzonEnviar.getCapacidad()) {
+			System.out.println(buzonEnviar.getMemoria().length);
+			System.out.println(buzonEnviar.getCapacidad());
+			System.out.println("Validacion");
+			Thread.yield();
 		}
 		try {
 
@@ -80,7 +83,6 @@ public class T extends Thread{
 
 	}
 	private void enviarSincrono( ) {
-
 		try {
 			this.sleep(tiempoTransformacion);
 		} catch (InterruptedException e) {
