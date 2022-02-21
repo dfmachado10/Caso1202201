@@ -38,7 +38,6 @@ public class Buzon {
 			synchronized(entregadoresDormidos) {
 				cantidadActual++;
 				memoria.add(mensaje);
-				System.out.println("buzon " + id + " recibe " + mensaje);
 				entregadoresDormidos.notify();
 			}
 		}

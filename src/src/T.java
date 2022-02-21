@@ -3,12 +3,6 @@
  */
 package src;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Queue;
-
-import javax.swing.border.LineBorder;
 
 /**
  * @author Gabriel
@@ -67,7 +61,7 @@ public class T extends Thread{
 
 		//Pasivo
 		mensaje = buzonRecibir.retirarMensaje();
-
+		
 		if(!mensaje.equals(MENSAJE_FIN)) {
 
 			transformarMensaje();
@@ -91,7 +85,6 @@ public class T extends Thread{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println(id + " enviando " + mensaje + " al buzon " + buzonEnviar.getID());
 
 		buzonEnviar.guardarMensaje(mensaje);
 
@@ -104,7 +97,6 @@ public class T extends Thread{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println(id + " enviando " + mensaje + " al buzon " + buzonEnviar.getID());
 		buzonEnviar.guardarMensaje(mensaje);
 
 	}
@@ -126,7 +118,6 @@ public class T extends Thread{
 			for (int i = 0; i < mensajes.length; i++) {
 				mensaje = mensajes[i];
 				if(envioActivo) {
-					System.out.println("enviando  " + mensajes[i]);
 					enviarAsincrono();
 				}
 				else {
@@ -145,7 +136,7 @@ public class T extends Thread{
 
 
 		}
-		while(!mensaje.equals(MENSAJE_FIN)) {
+		while(!mensaje.equals(MENSAJE_FIN) ) {
 			if(reciboActivo) {
 				recibirAsincrono();
 			}
@@ -158,7 +149,7 @@ public class T extends Thread{
 
 
 	}
-	
+
 	public void setCantidadMensajes(int i) {
 		cantidadMensajes = i;
 		mensajes = new String[cantidadMensajes];
