@@ -1,19 +1,22 @@
 package src;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class Buzon {
 	private char id;
 	private int capacidad;
 	
 
 	private int cantidadActual;
-	private String[] memoria;
+	Queue<String> memoria ;
 	private Object almacenadoresDormidos;
 	private Object entregadoresDormidos;
 	
 	public Buzon(char id, int capacidad) {
 		this.id = id;
 		this.capacidad = capacidad;
-		memoria = new String[capacidad];
+		memoria = new LinkedList<String>();
 		almacenadoresDormidos = new Object();
 		entregadoresDormidos = new Object();
 	}
@@ -23,7 +26,6 @@ public class Buzon {
 	}
 	
 	public void guardarMensaje(String mensaje) {
-		System.out.println("El buzon: " + id  + " recibe el mensaje " + mensaje);
 		synchronized (almacenadoresDormidos) {
 			while(cantidadActual == capacidad ) {
 				try {
@@ -35,8 +37,8 @@ public class Buzon {
 			}
 			synchronized(entregadoresDormidos) {
 				cantidadActual++;
-				memoria[cantidadActual-1] = mensaje;
-				
+				memoria.add(mensaje);
+				System.out.println("buzon " + id + " recibe " + mensaje);
 				entregadoresDormidos.notify();
 			}
 		}
@@ -52,9 +54,8 @@ public class Buzon {
 					e.printStackTrace();
 				}
 			}
-			synchronized(this) {
-				mensaje = memoria[cantidadActual-1];
-				memoria[cantidadActual-1] = "";
+			synchronized(almacenadoresDormidos) {
+				mensaje = memoria.poll();
 				cantidadActual--;
 				almacenadoresDormidos.notify();
 			}
@@ -63,7 +64,7 @@ public class Buzon {
 		
 	}
 
-	public String[] getMemoria() {
+	public Queue<String> getMemoria() {
 		return memoria;
 	}
 
@@ -78,6 +79,10 @@ public class Buzon {
 
 	public int getCantidadActual() {
 		return cantidadActual;
+	}
+
+	public char getID() {
+		return id;
 	}
 
 

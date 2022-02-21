@@ -52,8 +52,9 @@ public class Principal {
 					procesos[i].asignarRecibir(buzones[3]);
 				}
 				else {
-					procesos[i].asignarRecibir(buzones[i]);
+					procesos[i].asignarRecibir(buzones[i-1]);
 				}
+				
 			}
 			pedirMensajes();
 			

@@ -3,7 +3,12 @@
  */
 package src;
 
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Queue;
+
+import javax.swing.border.LineBorder;
 
 /**
  * @author Gabriel
@@ -30,19 +35,26 @@ public class T extends Thread{
 		super();
 		this.id = id;
 		this.reciboActivo = reciboActivo;
+		reciboStr = reciboActivo ? "Asincrono" : "Sincrono";
 		this.envioActivo = envioActivo;
+		envioStr = envioActivo ? "Asincrono" : "Sincrono";
+
 		this.tiempoTransformacion = tiempoTransformacion;
 
 		mensaje = "";
 
 	}
 	private void recibirAsincrono() {
+
 		//Activo
 		while(!buzonRecibir.tieneMensaje()) {
-			this.yield();
+			Thread.yield();
 		}
 		mensaje = buzonRecibir.retirarMensaje();
-		transformarMensaje();
+		if(!mensaje.equals(MENSAJE_FIN)) {
+
+			transformarMensaje();
+		}
 		if(envioActivo) {
 			enviarAsincrono();
 		}
@@ -55,7 +67,11 @@ public class T extends Thread{
 
 		//Pasivo
 		mensaje = buzonRecibir.retirarMensaje();
-		transformarMensaje();
+
+		if(!mensaje.equals(MENSAJE_FIN)) {
+
+			transformarMensaje();
+		}
 		if(envioActivo) {
 			enviarAsincrono();
 		}
@@ -66,29 +82,29 @@ public class T extends Thread{
 	}
 	private void enviarAsincrono() {
 		while(buzonEnviar.getCantidadActual() == buzonEnviar.getCapacidad()) {
-			System.out.println(buzonEnviar.getMemoria().length);
-			System.out.println(buzonEnviar.getCapacidad());
-			System.out.println("Validacion");
 			Thread.yield();
 		}
 		try {
 
-			this.sleep(tiempoTransformacion);
+			Thread.sleep(tiempoTransformacion);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		System.out.println(id + " enviando " + mensaje + " al buzon " + buzonEnviar.getID());
+
 		buzonEnviar.guardarMensaje(mensaje);
 
 
 	}
 	private void enviarSincrono( ) {
 		try {
-			this.sleep(tiempoTransformacion);
+			Thread.sleep(tiempoTransformacion);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		System.out.println(id + " enviando " + mensaje + " al buzon " + buzonEnviar.getID());
 		buzonEnviar.guardarMensaje(mensaje);
 
 	}
@@ -110,23 +126,21 @@ public class T extends Thread{
 			for (int i = 0; i < mensajes.length; i++) {
 				mensaje = mensajes[i];
 				if(envioActivo) {
+					System.out.println("enviando  " + mensajes[i]);
 					enviarAsincrono();
-					System.out.println("holi");
 				}
 				else {
 					enviarSincrono();
-					System.out.println("holi");
 				}
 
 			}
 			mensaje = MENSAJE_FIN;
 			if(envioActivo) {
 				enviarAsincrono();
-				
+
 			}
 			else {
 				enviarSincrono();
-				System.out.println("holi");
 			}
 
 
@@ -134,18 +148,21 @@ public class T extends Thread{
 		while(!mensaje.equals(MENSAJE_FIN)) {
 			if(reciboActivo) {
 				recibirAsincrono();
-				System.out.println("holi");
 			}
 			else {
 				recibirSincrono();
-				System.out.println("holi");
+
 			}
 		}
+
+
+
 	}
+	
 	public void setCantidadMensajes(int i) {
 		cantidadMensajes = i;
 		mensajes = new String[cantidadMensajes];
-		
+
 		for (int j = 0; j < mensajes.length; j++) {
 			mensajes[j] = "Mensaje: " + j + " ";
 			int a = 0;
