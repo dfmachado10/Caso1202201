@@ -100,7 +100,7 @@ public class T extends Thread{
 
 
 	private void transformarMensaje ( ) {
-		mensaje += " ID: " + id + " R: " + reciboStr + " E: " + envioStr + "\n";
+		mensaje += " ID: " + id + " R: " + reciboStr + " E: " + envioStr + " ";
 	}
 	@Override
 	public void run() {
