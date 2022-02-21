@@ -3,11 +3,14 @@
  */
 package src;
 
+import java.util.Iterator;
+
 /**
  * @author Gabriel
  *
  */
 public class T extends Thread{
+	private static final String MENSAJE_FIN = "FIN";
 	private int id;
 	private Buzon buzonEnviar;
 	private Buzon buzonRecibir;
@@ -18,6 +21,7 @@ public class T extends Thread{
 	private int tiempoTransformacion;
 	private String mensaje;
 	private int cantidadMensajes;
+	private String [] mensajes;
 
 
 
@@ -60,23 +64,23 @@ public class T extends Thread{
 
 	}
 	private void enviarAsincrono() {
-		
+
 		while(buzonEnviar.getMemoria().length == buzonEnviar.getCapacidad()) {
 			this.yield();
 		}
 		try {
-			
+
 			this.sleep(tiempoTransformacion);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		buzonEnviar.guardarMensaje(mensaje);
-		
+
 
 	}
 	private void enviarSincrono( ) {
-		
+
 		try {
 			this.sleep(tiempoTransformacion);
 		} catch (InterruptedException e) {
@@ -88,21 +92,21 @@ public class T extends Thread{
 	}
 	public void asignarBuzon(Buzon buzon) {
 		buzonEnviar = buzon;
-		
+
 	}
 	public void asignarRecibir(Buzon buzon) {
 		buzonRecibir = buzon;		
 	}
-	
-	
+
+
 	private void transformarMensaje ( ) {
 		mensaje += "ID: " + id + " R: " + reciboStr + " E: " + envioStr + "\n";
 	}
 	@Override
 	public void run() {
-		while(!mensaje.equals("FIN")) {
-			if(id == 1) {
-				
+		if(id == 1) {
+			for (int i = 0; i < mensajes.length; i++) {
+				mensaje = mensajes[i];
 				if(envioActivo) {
 					enviarAsincrono();
 					System.out.println("holi");
@@ -113,6 +117,19 @@ public class T extends Thread{
 				}
 
 			}
+			mensaje = MENSAJE_FIN;
+			if(envioActivo) {
+				enviarAsincrono();
+				
+			}
+			else {
+				enviarSincrono();
+				System.out.println("holi");
+			}
+
+
+		}
+		while(!mensaje.equals(MENSAJE_FIN)) {
 			if(reciboActivo) {
 				recibirAsincrono();
 				System.out.println("holi");
@@ -125,7 +142,11 @@ public class T extends Thread{
 	}
 	public void setCantidadMensajes(int i) {
 		cantidadMensajes = i;
-		
+		mensajes = new String[cantidadMensajes];
+		for (int j = 0; j < mensajes.length; j++) {
+			mensajes[i] = "Mensaje: " + i;
+		}
+
 	}
 
 }
