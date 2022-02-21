@@ -143,8 +143,10 @@ public class T extends Thread{
 	public void setCantidadMensajes(int i) {
 		cantidadMensajes = i;
 		mensajes = new String[cantidadMensajes];
+		
 		for (int j = 0; j < mensajes.length; j++) {
-			mensajes[i] = "Mensaje: " + i + " ";
+			mensajes[j] = "Mensaje: " + j + " ";
+			int a = 0;
 		}
 
 	}

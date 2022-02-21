@@ -3,9 +3,7 @@ package src;
 public class Buzon {
 	private char id;
 	private int capacidad;
-	public int getCapacidad() {
-		return capacidad;
-	}
+	
 
 	private int cantidadActual;
 	private String[] memoria;
@@ -20,6 +18,10 @@ public class Buzon {
 		entregadoresDormidos = new Object();
 	}
 
+	public int getCapacidad() {
+		return capacidad;
+	}
+	
 	public void guardarMensaje(String mensaje) {
 		synchronized (almacenadoresDormidos) {
 			while(cantidadActual == capacidad ) {
