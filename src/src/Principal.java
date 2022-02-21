@@ -10,6 +10,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Scanner;
 
 
@@ -38,7 +39,6 @@ public class Principal {
 				String[] buzon = line.split(" ");
 				buzones[i] = new Buzon(buzon[0].charAt(0), Integer.parseInt(buzon[1]));
 			}
-			pedirMensajes();
 			for (int i = 0; i < 4; i++) {
 				String line = br.readLine();
 				String[] proceso = line.split(" ");
@@ -52,10 +52,15 @@ public class Principal {
 					procesos[i].asignarRecibir(buzones[3]);
 				}
 				else {
-					procesos[i].asignarRecibir(buzones[i-1]);
+					procesos[i].asignarRecibir(buzones[i]);
 				}
+			}
+			pedirMensajes();
+			
+			for (int i = 0; i < 4; i++) {
 				procesos[i].start();
 			}
+			
 			T[] copia1 = procesos;
 			Buzon[] copia2 = buzones;
 			br.close();

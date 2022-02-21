@@ -28,6 +28,7 @@ public class T extends Thread{
 		this.reciboActivo = reciboActivo;
 		this.envioActivo = envioActivo;
 		this.tiempoTransformacion = tiempoTransformacion;
+
 		mensaje = "";
 
 	}
@@ -59,10 +60,30 @@ public class T extends Thread{
 
 	}
 	private void enviarAsincrono() {
-
+		
+		while(buzonEnviar.getMemoria().length == buzonEnviar.getCapacidad()) {
+			this.yield();
+		}
+		try {
+			
+			this.sleep(tiempoTransformacion);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		buzonEnviar.guardarMensaje(mensaje);
+		
 
 	}
 	private void enviarSincrono( ) {
+		
+		try {
+			this.sleep(tiempoTransformacion);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		buzonEnviar.guardarMensaje(mensaje);
 
 	}
 	public void asignarBuzon(Buzon buzon) {
@@ -72,6 +93,8 @@ public class T extends Thread{
 	public void asignarRecibir(Buzon buzon) {
 		buzonRecibir = buzon;		
 	}
+	
+	
 	private void transformarMensaje ( ) {
 		mensaje += "ID: " + id + " R: " + reciboStr + " E: " + envioStr + "\n";
 	}
@@ -80,12 +103,23 @@ public class T extends Thread{
 		while(!mensaje.equals("FIN")) {
 			if(id == 1) {
 				
+				if(envioActivo) {
+					enviarAsincrono();
+					System.out.println("holi");
+				}
+				else {
+					enviarSincrono();
+					System.out.println("holi");
+				}
+
 			}
 			if(reciboActivo) {
 				recibirAsincrono();
+				System.out.println("holi");
 			}
 			else {
 				recibirSincrono();
+				System.out.println("holi");
 			}
 		}
 	}

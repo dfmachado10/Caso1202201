@@ -3,6 +3,10 @@ package src;
 public class Buzon {
 	private char id;
 	private int capacidad;
+	public int getCapacidad() {
+		return capacidad;
+	}
+
 	private int cantidadActual;
 	private String[] memoria;
 	private Object almacenadoresDormidos;
@@ -16,7 +20,7 @@ public class Buzon {
 		entregadoresDormidos = new Object();
 	}
 
-	private void guardarMensaje(String mensaje) {
+	public void guardarMensaje(String mensaje) {
 		synchronized (almacenadoresDormidos) {
 			while(cantidadActual == capacidad ) {
 				try {
@@ -24,16 +28,18 @@ public class Buzon {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
+				
 			}
 			synchronized(this) {
 				memoria[cantidadActual-1] = mensaje;
+				
 				cantidadActual++;
 				entregadoresDormidos.notify();
 			}
 		}
 	}
 	public String retirarMensaje() {
-		String mensaje = null;
+		String mensaje = "";
 		synchronized(entregadoresDormidos) {
 			while(cantidadActual == 0) {
 				try {
@@ -52,6 +58,10 @@ public class Buzon {
 		}
 		return mensaje;
 		
+	}
+
+	public String[] getMemoria() {
+		return memoria;
 	}
 
 	public boolean tieneMensaje() {
