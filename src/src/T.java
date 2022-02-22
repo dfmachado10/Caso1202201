@@ -47,6 +47,9 @@ public class T extends Thread{
 		mensaje = buzonRecibir.retirarMensaje();
 		if(!mensaje.equals(MENSAJE_FIN)) {
 
+			if(id==1){
+				System.out.println(mensaje);
+			}
 			transformarMensaje();
 		}
 		if(envioActivo) {
@@ -61,8 +64,10 @@ public class T extends Thread{
 
 		//Pasivo
 		mensaje = buzonRecibir.retirarMensaje();
-		
 		if(!mensaje.equals(MENSAJE_FIN)) {
+			if(id==1){
+				System.out.println(mensaje);
+			}
 
 			transformarMensaje();
 		}
@@ -86,9 +91,7 @@ public class T extends Thread{
 			e.printStackTrace();
 		}
 		
-		if(id==1){
-			System.out.println(mensaje);
-		}
+		
 
 		buzonEnviar.guardarMensaje(mensaje);
 
@@ -119,6 +122,7 @@ public class T extends Thread{
 	private void transformarMensaje ( ) {
 		mensaje += " ID: " + id + " R: " + reciboStr + " E: " + envioStr + " ";
 	}
+	
 	@Override
 	public void run() {
 		if(id == 1) {
@@ -141,7 +145,7 @@ public class T extends Thread{
 				enviarSincrono();
 			}
 
-
+			mensaje = "";
 		}
 		while(!mensaje.equals(MENSAJE_FIN) ) {
 			if(reciboActivo) {
@@ -152,6 +156,7 @@ public class T extends Thread{
 
 			}
 		}
+		System.out.println("Proceso: " + id + " finalizo");
 
 
 

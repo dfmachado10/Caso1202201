@@ -82,7 +82,6 @@ public class Buzon {
 
 	public char getID() {
 		return id;
-		int a = 0;
 	}
 
 
