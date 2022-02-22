@@ -85,6 +85,10 @@ public class T extends Thread{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		if(id==1){
+			System.out.println(mensaje);
+		}
 
 		buzonEnviar.guardarMensaje(mensaje);
 
@@ -96,6 +100,9 @@ public class T extends Thread{
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		if(id==1){
+			System.out.println(mensaje);
 		}
 		buzonEnviar.guardarMensaje(mensaje);
 
